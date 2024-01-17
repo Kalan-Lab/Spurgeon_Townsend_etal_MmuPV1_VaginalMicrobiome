@@ -1,0 +1,153 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Monaco;
+\f3\fmodern\fcharset0 Courier-Bold;\f4\fmodern\fcharset0 Courier;\f5\fnil\fcharset0 Menlo-Bold;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red22\green21\blue22;
+\red38\green38\blue38;\red50\green91\blue142;\red0\green0\blue0;\red242\green242\blue242;}
+{\*\expandedcolortbl;;\csgray\c0\c0;\csgray\c0;\cssrgb\c11373\c10980\c11373;
+\cssrgb\c20000\c20000\c20000;\cssrgb\c25098\c43922\c62745;\cssrgb\c0\c0\c0;\cssrgb\c96078\c96078\c96078;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb2 # # QIIME analysis for the  mouse vaginal microbiome collaboration Experiment 4\
+# May 17th 2023\
+#GETTING INTO THE QIIME condo environment \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf3 \CocoaLigature0 conda activate qiime2-2021.2\
+\
+cd [PATH TO DIRECTORY]
+\f0\fs24 \cf0 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+# IMPORTING DATA FROM MANUFEST\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2 \cf4 \expnd0\expndtw0\kerning0
+qiime tools import \\\
+  --type 'SampleData[PairedEndSequencesWithQuality]' \\\
+  --input-path E5Manufest.txt \\\
+  --output-path E5.qza \\\
+  --input-format PairedEndFastqManifestPhred33V2\
+\
+# INTERACTIVE QUALITY PLOT. \
+#  to determine where to cut off for the DADA2. View what you made and navigate to the \'93interactive quality plot tab\'94 \
+\
+qiime demux summarize --i-data E5.qza --o-visualization E5.qzv\
+\
+qiime tools view E5.qzv \
+\
+# RUNNING DADA2 \
+# The UW center sequences V3 and V4 (~445bp) 
+\f1\fs22 \cf3 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\pardeftab720\sl380\partightenfactor0
+
+\f3\b\fs28 \cf5 \cb2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qiime dada2 denoise-paired \cf6 \\\cf5 \
+  --i-demultiplexed-seqs E5.qza \cf6 \\\cf5 \
+  --o-representative-sequences E5-dada2.qza \cf6 \\\
+  \cf7 --p-trim-left-f 20 \\\
+  --p-trim-left-r 20 \\\
+  
+\fs22 \kerning1\expnd0\expndtw0 \ul \CocoaLigature0 --p-trunc-len-f
+\fs28 \expnd0\expndtw0\kerning0
+\ulnone \CocoaLigature1  270 \\\
+  
+\fs22 \kerning1\expnd0\expndtw0 \ul \CocoaLigature0 --p-trunc-len-r
+\fs28 \expnd0\expndtw0\kerning0
+\ulnone \CocoaLigature1  220 \\\
+  
+\f4\b0 \cf5 \cb8 --p-max-ee-f 5 \\\
+
+\f3\b \cf6 \cb2   
+\f4\b0 \cf5 \cb8 --p-max-ee-r 5 \\
+\f3\b \cf6 \cb2 \
+\cf5   --p-n-threads 4 \\\
+  --o-table table-E5-dada2.qza \cf6 \\\cf5 \
+  --o-denoising-stats stats-E5-dada2.qza
+\f5\fs22 \cf3 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\
+\
+\pard\pardeftab720\sl380\partightenfactor0
+
+\f3\fs28 \cf5 \cb2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 qiime metadata tabulate   --m-input-file stats-E5-dada2.qza   --o-visualization stats-E5-dada2.qzv\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f5\fs22 \cf3 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 qiime tools view stats-E5-dada2.qzv \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\b0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f4\fs28 \cf5 \cb2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+\pard\pardeftab720\sl380\partightenfactor0
+\cf5 # SUMMARY FEATURE TABLE \
+qiime feature-table summarize 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --i-table table-E5-dada2.qza 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --o-visualization table-E5-dada2.qzv 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --m-sample-metadata-file 
+\f2\fs24 \cf4 E5Manufest.txt
+\f4\fs28 \cf5 \
+qiime feature-table tabulate-seqs 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --i-data E5-dada2.qza 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --o-visualization rep-seq-E5-dada2.qzv\
+\
+qiime tools view table-E5-dada2.qzv\
+qiime tools view rep-seq-E5-dada2.qzv\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf3 \cb1 \kerning1\expnd0\expndtw0 \CocoaLigature0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\fs24 \cf4 \cb2 \expnd0\expndtw0\kerning0
+\CocoaLigature1 \
+# ASSIGNING TAXONOMY\
+\pard\pardeftab720\sl380\partightenfactor0
+
+\f4\fs28 \cf5 ## Clasifier \
+qiime feature-classifier classify-sklearn --i-classifier [PATH TO CLASSIFIER]/gg-13-8-99-nb-classifier.qza --i-reads E5-dada2.qza --o-classification taxonomy-E5.qza\
+\
+# make stacked bar plots and view them\
+qiime taxa barplot \\\
+  --i-table table-E5-dada2.qza \\\
+  --i-taxonomy taxonomy-E5.qza \\\
+  --m-metadata-file 
+\f2\fs24 \cf4 E5Manufest.txt
+\f4\fs28 \cf5 \\\
+  --o-visualization E5-taxa-bar-plots.qzv\
+\
+qiime tools view E5-taxa-bar-plots.qzv\
+\
+# Making a TREEE\
+\pard\pardeftab720\partightenfactor0
+\cf5 \cb8 qiime phylogeny align-to-tree-mafft-fasttree 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --i-sequences E5-dada2.qza 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --o-alignment aligned-rep-seqs-E5.qza 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --o-masked-alignment masked-aligned-rep-seqs-E5.qza 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --o-tree E5-unrooted-tree.qza 
+\f3\b \cf6 \\
+\f4\b0 \cf5 \
+  --o-rooted-tree E5-rooted-tree.qza\
+}
