@@ -192,23 +192,22 @@ ggplot(NatAlphaTable, aes(x = Ex, y =diversity_shannon, color = Ex))+
   ggtitle("Shannon Diversity of the Natural Mouse Vaginal Microbiome")
 
 # beta diversity of the natural microbiome 
-ps.NaturalPD<- subset_samples(ps.Natural, NaturalMicro %in% c("Natural", "Post-Depo"))
-min(sample_sums(ps.NaturalPD))# minimum sample read is 11
-median(sample_sums(ps.NaturalPD)) # 3851
-max(sample_sums(ps.NaturalPD)) #46861
-table(sample_sums(ps.NaturalPD))
+min(sample_sums(ps.Natural))# minimum sample read is 11
+median(sample_sums(ps.Natural)) # 6835
+max(sample_sums(ps.Natural)) #63016
+table(sample_sums(ps.Natural))
 
-rarecurve(t(otu_table(ps.NaturalPD)), step=100, ylim =c(0,100), xlim=c(0,1100))  ## considering using a read cut off of 5000 for beta diversity metrics 
+rarecurve(t(otu_table(ps.Natural)), step=100, ylim =c(0,100), xlim=c(0,1100))  ## considering using a read cut off of 5000 for beta diversity metrics 
 
-ps.NatRarefied = rarefy_even_depth(ps.NaturalPD, rngseed=1, sample.size=500, replace=F) # 9 samples removed due to too few reads 
+ps.NatRarefied = rarefy_even_depth(ps.Natural, rngseed=1, sample.size=700, replace=F) # 9 samples removed due to too few reads 
 
 GP = ps.NatRarefied
 GP.ord <- ordinate(GP, "NMDS",  "bray") # For Bray Curtis of the rareified dataset
-plot_ordination(GP, GP.ord, type="samples", color ="Ex")+# shape = "EdgeCenter") + 
+plot_ordination(GP, GP.ord, type="samples", color="Ex")+# shape = "EdgeCenter") + 
   geom_point(size=3) + ggtitle("Bray Curtis")+
   stat_ellipse(type = "t", level = 0.9)+
-  geom_point(size = 6)+# , aes(shape= NaturalMicro))+
-  scale_shape_manual(values = c(19,17))+
+  geom_point(size = 6)+
+  scale_shape_manual(values = c(3,4,19,17))+
   scale_color_manual(values = c("#EFB366","#DE7350"))+
   theme_bw()
 
